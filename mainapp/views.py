@@ -52,8 +52,8 @@ def index(request):
 #extra task info from models
 
 def products(request):
-    items = Product.objects.all()
     context = {
         'title': 'geekshop',
-        'products': items}
+        'categories': ProductCategory.objects.all(),
+        'products': Product.objects.all()}
     return render(request, 'mainapp/products.html', context)
