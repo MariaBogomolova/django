@@ -17,13 +17,12 @@ Including another URLconf
 
 
 from django.urls import path
-#from .views import login, register, logout, profile
+from baskets.views import basket_add, basket_remove
 
 app_name = 'baskets'
 
 urlpatterns = [
-    #path('login/', login, name='login'),
-    #path('register/', register, name='register'),
-    #path('logout/', logout, name='logout'),
-    #path('profile/', profile, name='profile')
+    path('add/<int:product_id>/', basket_add, name='basket'),
+    path('remove/<int:product_id>/', basket_remove, name='basket_remove'),
+
 ]

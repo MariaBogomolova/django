@@ -3,6 +3,8 @@ from django.contrib import auth
 from django.contrib import messages
 from django.urls import reverse
 from users.forms import UserLoginForm, UserRegisterForm, UserProfileForm
+from baskets.models import Basket
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -47,6 +49,7 @@ def register(request):
     return render(request, 'users/register.html', context)
 
 
+@login_required
 def profile(request):
 
     if request.method == 'POST':
@@ -60,7 +63,9 @@ def profile(request):
 
     context = {
         'title': 'Geekshop - Личный кабинет',
-        'form': UserProfileForm(instance=request.user)
+        'form': UserProfileForm(instance=request.user),
+        'baskets': Basket.objects.filter(user=request.user)
+
     }
     return render(request, 'users/profile.html', context)
 
