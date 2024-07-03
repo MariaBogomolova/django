@@ -53,6 +53,6 @@ class UserProfileForm(UserChangeForm):
 
     def clean_image(self):
         data = self.cleaned_data['image']
-        if data.size > 3000:
+        if data.size < 3000:
             raise forms.ValidationError('File is very big')
         return data

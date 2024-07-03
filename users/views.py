@@ -57,6 +57,7 @@ def profile(request):
 
         if form.is_valid():
             form.save()
+            messages.success(request, "Данные успешно сохранены")
             return HttpResponseRedirect(reverse('users:profile'))
         else:
             print(form.errors)
