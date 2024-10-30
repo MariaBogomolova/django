@@ -3,9 +3,9 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
-from admins.forms import UserAdminRegisterForm, UserAdminProfileForm, ProductCategoryEditForm
+from admins.forms import UserAdminRegisterForm, UserAdminProfileForm, ProductCategoryEditForm, ProductEditForm
 from geekshop.mixin import CustomDispatchMixin
-from mainapp.models import ProductCategory
+from mainapp.models import ProductCategory, Product
 from users.models import User
 
 
@@ -111,4 +111,30 @@ class CategoryDeleteView(DeleteView, CustomDispatchMixin):
     success_url = reverse_lazy('admins:admins_category')
 
 
+class ProductCategoryListView(ListView, CustomDispatchMixin):
+    model = Product
+    template_name = 'admins/admin-products-category-read.html'
+    context_object_name = 'products_category'
+
+    def get_queryset(self):
+         return Product.objects.filter(category=self.kwargs['pk'])
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(ProductCategoryListView, self).get_context_data(**kwargs)
+        context['title'] = 'Админка | Товары категории'
+        return context
+
+
+
+
+class ProductUpdateView(UpdateView, CustomDispatchMixin):
+    model = Product
+    template_name = 'admins/admin-products-update.html'
+    form_class = ProductEditForm
+    success_url = reverse_lazy('admins:admins_products')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(ProductUpdateView, self).get_context_data(**kwargs)
+        context['title'] = 'Админка | Редактирование товара категории'
+        return context
 

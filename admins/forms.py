@@ -1,6 +1,6 @@
 from django import forms
 
-from mainapp.models import ProductCategory
+from mainapp.models import ProductCategory, Product
 from users.forms import UserRegisterForm, UserProfileForm
 from users.models import User
 
@@ -39,6 +39,19 @@ class ProductCategoryEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ProductCategoryEditForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+            field.help_text = ''
+
+
+class ProductEditForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(ProductEditForm, self).__init__(*args, **kwargs)
+        self.fields['image'].widget.attrs['class'] = 'custom-file-input'
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
             field.help_text = ''
