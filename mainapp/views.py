@@ -51,9 +51,10 @@ def index(request):
 
 #extra task info from models
 
-def products(request):
+def products(request, category_id=None):
+    products = Product.objects.filter(category_id=category_id) if category_id is not None else Product.objects.all()
     context = {
         'title': 'geekshop',
         'categories': ProductCategory.objects.all(),
-        'products': Product.objects.all()}
+        'products': products}
     return render(request, 'mainapp/products.html', context)

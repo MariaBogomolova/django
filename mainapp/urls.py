@@ -22,4 +22,5 @@ from .views import products
 app_name = 'mainapp'
 urlpatterns = [
     path('', products, name='index'),
+    path('category/<int:category_id>/', products, name='category'),
 ]
