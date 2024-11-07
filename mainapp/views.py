@@ -1,5 +1,9 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 import os, json
+
+from django.template.loader import render_to_string
+
 from .models import ProductCategory, Product
 
 
@@ -53,8 +57,16 @@ def index(request):
 
 def products(request, category_id=None):
     products = Product.objects.filter(category_id=category_id) if category_id is not None else Product.objects.all()
-    context = {
-        'title': 'geekshop',
-        'categories': ProductCategory.objects.all(),
-        'products': products}
+    if is_ajax():
+        context = {
+            'products': products}
+        result = render_to_string('mainapp/filtered_products.html', context)
+        return JsonResponse({'result': result})
+    else:
+        context = {
+            'title': 'geekshop',
+            'categories': ProductCategory.objects.all(),
+            'products': products}
     return render(request, 'mainapp/products.html', context)
+
+
