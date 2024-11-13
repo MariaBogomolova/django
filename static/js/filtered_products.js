@@ -1,16 +1,23 @@
 window.onload = function() {
-    $('.filtered_products').on('click', 'input[type="number"]', function(){
-        let t_href = event.target;
-        console.log(t_href.name);
-        console.log(t_href.value);
+    $('.list-group').on('click', 'a.list-group-item', function(event){
+        event.preventDefault();
+
+        var categoryId = $(this).data('category-id');
+        console.log(categoryId);
 
         $.ajax({
 
-            url: '/baskets/edit/' + t_href.name + '/' + t_href.value + '/',
+            url: 'category/' + categoryId + '/',
+            method: 'GET',
+
+            beforeSend: function(xhr) {
+               xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            },
             success: function(data) {
-            $('.basket_list').html(data.result)
+                console.log(data);
+                $('.filtered_products').html(data.result);
             },
         });
-        event.preventDefault()
+
     });
 };

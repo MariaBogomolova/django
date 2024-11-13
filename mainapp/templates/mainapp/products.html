@@ -15,7 +15,7 @@
             <h1 class="my-4">GeekShop</h1>
             <div class="list-group">
                 {% for category in categories %}
-                    <a href="{% url 'mainapp:category' category.id %}" class="list-group-item">{{ category }}</a>
+                    <a href="#" class="list-group-item" data-category-id="{{ category.id}}">{{ category }}</a>
                 {% endfor %}
             </div>
 
@@ -51,9 +51,9 @@
                 </a>
             </div>
 
-            <div class="row">
-                {% include 'mainapp/filtered_products.html' %}
-            </div>
+
+            {% include 'mainapp/filtered_products.html' %}
+
 
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
