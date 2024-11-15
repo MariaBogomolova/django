@@ -5,6 +5,7 @@ import os, json
 from django.template.loader import render_to_string
 
 from .models import ProductCategory, Product
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 MODULE_DIR = os.path.dirname(__file__)
@@ -56,8 +57,16 @@ def index(request):
 #extra task info from models
 
 
-def products(request, category_id=None):
+def products(request, category_id=None, page_id=1):
     products = Product.objects.filter(category_id=category_id) if category_id is not None else Product.objects.all()
+    paginator = Paginator(products, per_page=3)
+    try:
+        products_paginator = paginator.page(page_id)
+    except PageNotAnInteger:
+        products_paginator = paginator.page(1)
+    except EmptyPage:
+        products_paginator = paginator.page(paginator.num_pages)
+
 
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         context = {
@@ -67,9 +76,9 @@ def products(request, category_id=None):
         return JsonResponse({'result': result})
     else:
         context = {
-            'title': 'geekshop',
+            'title': 'Каталог',
             'categories': ProductCategory.objects.all(),
-            'products': products}
+            'products': products_paginator}
     return render(request, 'mainapp/products.html', context)
 
 
