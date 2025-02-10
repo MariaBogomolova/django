@@ -46,12 +46,12 @@ class UserRegisterForm(UserCreationForm):
         user.save()
         return user
 
-    # def clean_email(self):
-    #     email = self.cleaned_data['email']
-    #     is_existed = User.objects.filter(email=email).exists()
-    #     if is_existed:
-    #         raise forms.ValidationError('Пользователь с такой почтой уже существует')
-    #     return email
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        is_existed = User.objects.filter(email=email).exists()
+        if is_existed:
+            raise forms.ValidationError('Пользователь с такой почтой уже существует')
+        return email
 
 
 

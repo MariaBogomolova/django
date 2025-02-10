@@ -47,23 +47,24 @@ class LoginLoginView(LoginView, BaseClassContextMixin):
 #     return render(request, 'users/login.html', context)
 
 class RegisterView(CreateView, BaseClassContextMixin):
+    model = User
     form_class = UserRegisterForm
     template_name = 'users/register.html'
     success_url = reverse_lazy('users:login')
     title = 'Geekshop - Регистрация'
 
 
-    def form_valid(self, form):
-        user = form.save()
-
-        if user:
-            auth.login(self.request, user)
-
-        return super().form_valid(form)
+    # def form_valid(self, form):
+    #     user = form.save()
+    #
+    #     if user:
+    #         auth.login(self.request, user)
+    #
+    #     return super().form_valid(form)
 
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(data=request.POST, files=request.FILES, instance=self.get_object())
+        form = self.form_class(data=request.POST)
         if form.is_valid():
             user = form.save()
             if send_verify_link(user):
@@ -72,7 +73,7 @@ class RegisterView(CreateView, BaseClassContextMixin):
         return redirect(self.success_url)
 
 
-def send_verify_link(request, user):
+def send_verify_link(user):
     verify_link = reverse('users:verify', args=[user.email, user.activation_key])
     subject = f'Для активации учетной записи {user.username} пройдите по ссылке'
     message = f'Для подтверждения учетной записи {user.username} на портале \n {settings.DOMAIN_NAME}{verify_link}'
@@ -84,7 +85,7 @@ def verify(request, email, activation_key):
         user = User.objects.get(email=email)
         if user and user.activation_key == activation_key and not user.is_activation_key_expired():
             user.activation_key = ''
-            user.activation_key_created = None
+            #user.activation_key_created = None
             #user.activation_key_expires = None
             user.is_active = True
             user.save()
